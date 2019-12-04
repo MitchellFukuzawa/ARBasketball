@@ -24,7 +24,7 @@ public class Score : MonoBehaviour
             time = 0;
         }
 
-        Debug.Log(time);
+        
 
         if (Input.GetKeyDown(KeyCode.Space))
         {

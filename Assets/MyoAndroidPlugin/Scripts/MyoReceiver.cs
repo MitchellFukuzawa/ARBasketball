@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class MyoReceiver : MonoBehaviour 
 {
@@ -13,8 +14,13 @@ public class MyoReceiver : MonoBehaviour
 	private float _referenceRoll = 0.0f;
 
 
-	// Use this for initialization
-	void Start () {
+    public GameObject ball;
+    public GameObject net;
+
+    public Text poseTest;
+
+    // Use this for initialization
+    void Start () {
 
 		#if UNITY_ANDROID && !UNITY_EDITOR
 		_myoRef = _androidMyo;
@@ -31,27 +37,43 @@ public class MyoReceiver : MonoBehaviour
 	{
 		#if UNITY_EDITOR || !UNITY_ANDROID
 		CheckNormalMyoPose();
-		#endif
+        #endif
 
-		// Current zero roll vector and roll value.
-		Vector3 zeroRoll = computeZeroRollVector (_myoRef.transform.forward);
+    //    poseTest.text = _myoRef.GetComponent<MtbMyo>().pose.ToString();
+
+    //    if (_myoRef.GetComponent<MtbMyo>().pose == Thalmic.Myo.Pose.Fist)
+    //    {
+    //        Gameplay.instance.canThrow = true;
+    //    }
+    //    else
+    //    {
+    //        Gameplay.instance.canThrow = false;
+    //    }
+
+
+        
+
+        // Current zero roll vector and roll value.
+        Vector3 zeroRoll = computeZeroRollVector (_myoRef.transform.forward);
 		float roll = rollFromZero (zeroRoll, _myoRef.transform.forward, _myoRef.transform.up);
 		float relativeRoll = normalizeAngle (roll - _referenceRoll);
 		Quaternion antiRoll = Quaternion.AngleAxis (relativeRoll, _myoRef.transform.forward);
 		transform.rotation = _antiYaw * antiRoll * Quaternion.LookRotation (_myoRef.transform.forward);
-	}
+
+       
+    }
 
 
 	private void Myo_OnPose (Thalmic.Myo.Pose pose)
 	{
 		if (pose == Thalmic.Myo.Pose.FingersSpread) {
-			// Reset Myo Pose
-			_antiYaw = Quaternion.FromToRotation (
+            // Reset Myo Pose
+            _antiYaw = Quaternion.FromToRotation (
 				new Vector3 (_myoRef.transform.forward.x, 0, _myoRef.transform.forward.z),
 				new Vector3 (0, 0, 1)
 			);
 
-			Vector3 referenceZeroRoll = computeZeroRollVector (_myoRef.transform.forward);
+            Vector3 referenceZeroRoll = computeZeroRollVector (_myoRef.transform.forward);
 			_referenceRoll = rollFromZero (referenceZeroRoll, _myoRef.transform.forward, _myoRef.transform.up);
 		}
 	}
@@ -68,7 +90,11 @@ public class MyoReceiver : MonoBehaviour
 			Myo_OnPose (pose);
 			_normalMyoPose = pose;
 		}
-	}
+
+
+        
+
+    }
 
 
 	private float rollFromZero (Vector3 zeroRoll, Vector3 forward, Vector3 up)

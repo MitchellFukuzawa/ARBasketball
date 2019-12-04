@@ -64,10 +64,15 @@ public class ThalmicMyo : MonoBehaviour {
         _myo.NotifyUserAction ();
     }
 
+
+
     void Start() {
     }
 
     void Update() {
+
+       
+
         lock (_lock) {
             armSynced = _myoArmSynced;
             arm = _myoArm;
